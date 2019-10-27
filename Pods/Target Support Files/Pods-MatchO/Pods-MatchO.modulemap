@@ -1,0 +1,6 @@
+framework module Pods_MatchO {
+  umbrella header "Pods-MatchO-umbrella.h"
+
+  export *
+  module * { export * }
+}
