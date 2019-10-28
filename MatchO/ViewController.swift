@@ -21,6 +21,15 @@ class ViewController: UIViewController {
         return view
     }()
     
+    lazy var resetButton: UIButton = {
+       let button = UIButton()
+        button.setImage(UIImage(named: "reset"), for: .normal)
+        button.alpha = 0
+        button.addTarget(self, action: #selector(resetTapped),
+                         for: .touchUpInside)
+        return button
+    }()
+    
     lazy var miniView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemPurple
@@ -44,6 +53,7 @@ class ViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
+        guard miniViewFrame == .zero else { return }
         miniViewFrame = miniView.frame
     }
     
@@ -56,6 +66,13 @@ class ViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
         
+        view.addSubview(resetButton)
+        resetButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.snp.bottomMargin).inset(50)
+            make.centerX.equalToSuperview()
+            make.width.height.equalTo(50)
+        }
+        
         view.addSubview(centerView)
         centerView.snp.makeConstraints { make in
             make.center.equalToSuperview()
@@ -64,13 +81,22 @@ class ViewController: UIViewController {
         
         view.addSubview(miniView)
         miniView.snp.makeConstraints { make in
-            make.bottom.equalTo(view.snp.bottomMargin)
+            make.bottom.equalTo(view.snp.bottomMargin).inset(50)
             make.height.width.equalTo(50)
             make.centerX.equalToSuperview()
         }
         let miniViewPanGesture = UIPanGestureRecognizer(target: self,
                                                         action: #selector(miniViewTapped(pan:)))
         miniView.addGestureRecognizer(miniViewPanGesture)
+    }
+    
+    @objc func resetTapped() {
+        animate {
+            self.miniView.transform = .identity
+            self.miniView.frame = self.miniViewFrame
+            self.resetButton.alpha = 0
+            self.greatJobLabel.alpha = 0
+        }
     }
     
     @objc func miniViewTapped(pan: UIPanGestureRecognizer) {
@@ -90,6 +116,7 @@ class ViewController: UIViewController {
                 animate {
                     self.miniView.transform = CGAffineTransform(scaleX: 4, y: 4)
                     self.greatJobLabel.alpha = 1
+                    self.resetButton.alpha = 1
                 }
             } else {
                 animate { self.miniView.frame = self.miniViewFrame }
