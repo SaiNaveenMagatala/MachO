@@ -7,6 +7,7 @@ target 'MatchO' do
 
   # Pods for MatchO
   pod 'SnapKit', '~> 5.0.0'
+  pod 'SAConfettiView', git: 'git@github.com:jimmyti/SAConfettiView.git', branch: 'master'
 
   target 'MatchOTests' do
     inherit! :search_paths

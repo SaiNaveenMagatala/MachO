@@ -8,10 +8,18 @@
 
 import UIKit
 import SnapKit
+import SAConfettiView
 
 class ViewController: UIViewController {
     
     var miniViewFrame = CGRect.zero
+    
+    lazy var confettiView: SAConfettiView = {
+        let view = SAConfettiView(frame: self.view.bounds)
+        view.type = .confetti
+        view.intensity = 1
+        return view
+    }()
     
     lazy var centerView: UIView = {
         let view = UIView()
@@ -43,7 +51,7 @@ class ViewController: UIViewController {
         label.textColor = .white
         label.alpha = 0
         label.font = UIFont(name: "Baskerville-BoldItalic", size: 60)
-        label.text = "Great Job!!"
+        label.text = "Yayy!!"
         return label
     }()
     
@@ -54,6 +62,9 @@ class ViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         guard miniViewFrame == .zero else { return }
+        if confettiView.superview == nil {
+            view.insertSubview(confettiView, at: 0)
+        }
         miniViewFrame = miniView.frame
     }
     
@@ -97,6 +108,7 @@ class ViewController: UIViewController {
             self.resetButton.alpha = 0
             self.greatJobLabel.alpha = 0
         }
+        confettiView.stopConfetti()
     }
     
     @objc func miniViewTapped(pan: UIPanGestureRecognizer) {
@@ -118,6 +130,7 @@ class ViewController: UIViewController {
                     self.greatJobLabel.alpha = 1
                     self.resetButton.alpha = 1
                 }
+                confettiView.startConfetti()
             } else {
                 animate { self.miniView.frame = self.miniViewFrame }
             }
